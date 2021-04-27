@@ -50,7 +50,7 @@ class Georouter
 
 		// Setup plugin action links -- see plugin page.
 		add_filter('plugin_action_links_' . plugin_basename(__FILE__), array($this, 'plugin_action_links'));
-		add_action('enqueue_scripts', array($this, 'enqueue_scripts'));
+		add_action('wp_enqueue_scripts', array($this, 'enqueue_scripts'));
 		// Shortcode for Dropdown/Switcher widget
 		add_shortcode('georouter-switcher', array($this, 'georouter_switcher_shortcode'));
 	}
@@ -113,7 +113,7 @@ class Georouter
 		$namespace = $this->Georouter_Config->get_namespace();
 		if ($is_enabled && !empty($namespace)) {
 			$in_footer = $this->Georouter_Config->get_location() === 'body';
-			$script_url = self::JS_URL . $namespace;
+			$script_url = self::JS_URL . trailingslashit($namespace);
 			wp_enqueue_script('georouter', $script_url, array(), false, $in_footer);
 		}
 	}

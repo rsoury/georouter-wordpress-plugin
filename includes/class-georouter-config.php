@@ -37,7 +37,7 @@ class Georouter_Config
         );
     }
 
-    public function display_settings_page()
+    public function render_settings_page()
     {
 ?>
         <h2>GeoRouter Settings</h2>
@@ -49,10 +49,16 @@ class Georouter_Config
             ?>
             <input type="submit" name="submit" class="button button-primary" value="<?php esc_attr_e('Save'); ?>" />
         </form>
+        <br />
+        <hr />
+        <h3>Shortcodes</h3>
         <p>
-            <span>You can load in the GeoRouter Region Switcher/Dropdown using the shortcode: </span>
+            <span>You can load in the <b>GeoRouter Region Switcher/Dropdown</b> using the shortcode: </span>
             <input type="text" readonly value="[georouter-switcher]" />
         </p>
+        <br />
+        <hr />
+        <p><a href="https://wordpress.org/support/view/plugin-reviews/georouter?rate=5#postform" target="_blank" rel="noopener noreferrer">Love this plugin? Give our WordPress Plugin your rating :)</a></p>
 <?php
     }
 
@@ -62,23 +68,39 @@ class Georouter_Config
             $this->id . '_settings',
             $this->id . '_settings'
         );
-        add_settings_field(
-            'enable_disable',
-            'Enable/Disable',
-            array($this, 'georouter_render_enable_disable_checkbox_field'),
+        add_settings_section(
+            'georouter_section_one',
+            '',
+            '__return_empty_string',
             $this->id
         );
         add_settings_field(
+            'enable_disable',
+            'Enable GeoRouter',
+            array($this, 'georouter_render_enable_disable_checkbox_field'),
+            $this->id,
+            'georouter_section_one'
+        );
+        add_settings_field(
+            'disable_for_user_roles',
+            'Disable for User Roles',
+            array($this, 'georouter_render_disable_for_roles_field'),
+            $this->id,
+            'georouter_section_one'
+        );
+        add_settings_field(
             'namespace',
-            'Input your GeoRouter Namespace',
+            'GeoRouter Namespace',
             array($this, 'georouter_render_namespace_text_field'),
-            $this->id
+            $this->id,
+            'georouter_section_one'
         );
         add_settings_field(
             'location',
             'Where would you like to load the script (default: before <head/>)',
             array($this, 'georouter_render_location_dropdown_field'),
-            $this->id
+            $this->id,
+            'georouter_section_one'
         );
     }
 
@@ -86,8 +108,8 @@ class Georouter_Config
     {
         printf(
             '<input type="checkbox" name="%s" %s />',
-            esc_attr('georouter_settings[enable_disable]'),
-            esc_attr($this->is_enabled() ? 'checked' : 'false')
+            esc_attr($this->id . '_settings[enable_disable]'),
+            esc_attr($this->is_enabled() ? 'checked' : '')
         );
     }
 
@@ -95,34 +117,86 @@ class Georouter_Config
     {
         printf(
             '<input type="text" name="%s" value="%s" />',
-            esc_attr('georouter_settings[namespace]'),
+            esc_attr($this->id . '_settings[namespace]'),
             esc_attr($this->get_namespace())
         );
     }
 
     public function georouter_render_location_dropdown_field()
     {
+        $location = $this->get_location();
         printf(
-            '<select name="%"><option value="head" %s>before %s</option><option value="body" %s>before %s</option></select>',
-            esc_attr('georouter_settings[namespace]'),
-            $this->get_location() === 'head' ? 'selected' : '',
-            esc_html__('</head>'),
-            $this->get_location() === 'body' ? 'selected' : '',
-            esc_html__('</body>')
+            '<select name="%s"><option value="head" %s>%s</option><option value="body" %s>%s</option></select>',
+            esc_attr($this->id . '_settings[location]'),
+            esc_attr(($location === 'head' || empty($location)) ? 'selected' : ''),
+            esc_html__('before </head>'),
+            esc_attr($this->get_location() === 'body' ? 'selected' : ''),
+            esc_html__('before </body>')
         );
+    }
+
+    public function georouter_render_disable_for_roles_field()
+    {
+        $user_roles = get_editable_roles();
+        $disabled_user_roles = $this->get_disabled_user_roles();
+        $output = "<div>";
+        foreach ($user_roles as $user_role) {
+            $user_role_name = $user_role['name'];
+            $user_role_key = strtolower($user_role_name);
+            $checkbox_id = 'disable_for_user_roles__' . $user_role_key;
+            $output .= sprintf(
+                '<label for="%s">%s <input type="checkbox" name="%s" id="%s" %s />&nbsp;&nbsp;&nbsp;</label>',
+                esc_attr($checkbox_id),
+                esc_attr($user_role_name),
+                esc_attr($this->id . '_settings[disable_for_user_roles][' . $user_role_key . ']'),
+                esc_attr($checkbox_id),
+                esc_attr(in_array($user_role_key, $disabled_user_roles) ? 'checked' : '')
+            );
+        }
+        $output .= "</div>";
+        echo $output;
     }
 
     public function get_namespace()
     {
-        return get_option('georouter_settings')['namespace'];
+        return get_option($this->id . '_settings')['namespace'];
     }
     public function get_location()
     {
-        return get_option('georouter_settings')['location'];
+        return get_option($this->id . '_settings')['location'];
+    }
+    public function get_disabled_user_roles()
+    {
+        $options = get_option($this->id . '_settings');
+        if (array_key_exists('disable_for_user_roles', $options)) {
+            $disabled_user_roles = [];
+            foreach ($options['disable_for_user_roles'] as $key => $value) {
+                array_push($disabled_user_roles, $key);
+            }
+            return $disabled_user_roles;
+        }
+        return [];
     }
     public function is_enabled()
     {
-        return get_option('georouter_settings')['enable_disable'] === 'yes';
+        $options = get_option($this->id . '_settings');
+        if (array_key_exists('enable_disable', $options)) {
+            if ($options['enable_disable'] === 'on') {
+                // Check current user logged in
+                // If so, check role to ensure it's not under disabled_for_user_role
+                $user = wp_get_current_user();
+                if (!empty($user->ID)) {
+                    $disabled_user_roles = $this->get_disabled_user_roles();
+                    foreach ($disabled_user_roles as $role) {
+                        if (in_array($role, (array) $user->roles)) {
+                            return false;
+                        }
+                    }
+                }
+                return true;
+            }
+        }
+        return false;
     }
 
     public static function get_id()
