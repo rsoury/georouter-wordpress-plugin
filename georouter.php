@@ -125,11 +125,7 @@ class Georouter
 	 */
 	public function georouter_switcher_shortcode()
 	{
-?>
-		<!-- WebDoodle Country Select -->
-		<div class="wd-locale-select-container wd-locale wd-georouter"></div>
-		<!-- /WebDoodle Country Select -->
-<?php
+		return '<!-- WebDoodle Country Select --> <div class="wd-locale-select-container wd-locale wd-georouter"></div> <!-- /WebDoodle Country Select -->';
 	}
 }
 

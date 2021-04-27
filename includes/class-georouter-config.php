@@ -177,19 +177,21 @@ class Georouter_Config
         }
         return [];
     }
-    public function is_enabled()
+    public function is_enabled($check_disabled_roles = true)
     {
         $options = get_option($this->id . '_settings');
         if (array_key_exists('enable_disable', $options)) {
             if ($options['enable_disable'] === 'on') {
-                // Check current user logged in
-                // If so, check role to ensure it's not under disabled_for_user_role
-                $user = wp_get_current_user();
-                if (!empty($user->ID)) {
-                    $disabled_user_roles = $this->get_disabled_user_roles();
-                    foreach ($disabled_user_roles as $role) {
-                        if (in_array($role, (array) $user->roles)) {
-                            return false;
+                if ($check_disabled_roles) {
+                    // Check current user logged in
+                    // If so, check role to ensure it's not under disabled_for_user_role
+                    $user = wp_get_current_user();
+                    if (!empty($user->ID)) {
+                        $disabled_user_roles = $this->get_disabled_user_roles();
+                        foreach ($disabled_user_roles as $role) {
+                            if (in_array($role, (array) $user->roles)) {
+                                return false;
+                            }
                         }
                     }
                 }
