@@ -74,8 +74,8 @@ class Georouter
 	 */
 	public function load_dependencies()
 	{
-		require_once plugin_dir_path(__FILE__) . 'includes/class-wc-buyte-config.php';
-		require_once plugin_dir_path(__FILE__) . 'includes/class-wc-buyte-util.php';
+		require_once plugin_dir_path(__FILE__) . 'includes/class-georouter-config.php';
+		require_once plugin_dir_path(__FILE__) . 'includes/class-georouter-util.php';
 	}
 
 	/**
