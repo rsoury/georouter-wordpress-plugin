@@ -1,0 +1,6 @@
+/vendor/
+*.sh
+*.lock
+build.properties
+.DS_Store
+.store
