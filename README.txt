@@ -5,9 +5,9 @@ Stable tag: 0.0.2
 Tested up to: 5.7.1
 License: GPLv2 or later License http://www.gnu.org/licenses/gpl-2.0.html
 
-Web Doodle GeoRouter Plugin enables you auto-redirect website visitors using IP geolocation technology. Configure your routing by continent, country, state & city.
-
 == Description ==
+
+Web Doodle GeoRouter Plugin enables you auto-redirect website visitors using IP geolocation technology. Configure your routing by continent, country, state & city.
 
 **Features**
 1. Dynamic widgets: Show a dropdown for region selection, or a popup for region suggestion.
