@@ -4,7 +4,7 @@
  * Plugin Name:       GeoRouter
  * Plugin URI:        https://wordpress.org/plugins/georouter/
  * Description:       Auto-redirect website visitors using IP geolocation technology. Configure your routing by continent, country, state & city.
- * Version:           0.0.2
+ * Version:           1.0.0
  * Author:            Web Doodle
  * Author URI:        https://www.webdoodle.com.au/
  * License:           GPL-2.0+
@@ -12,7 +12,7 @@
  * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
  *
  *
- * @version  0.0.2
+ * @version  1.0.0
  * @package  GeoRouter
  * @author   Web Doodle
  */
@@ -25,7 +25,7 @@ if (!defined('WPINC')) {
 class Georouter
 {
 	/* version number */
-	const VERSION = '0.0.2';
+	const VERSION = '1.0.0';
 	/* api */
 	const JS_URL = 'https://georouter.services.webdoodle.com.au/';
 	const DEV_JS_URL = 'https://georouter.dev-services.webdoodle.com.au/';

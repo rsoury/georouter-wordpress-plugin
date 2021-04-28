@@ -1,7 +1,7 @@
 === GeoRouter ===
 Contributors: webdoodle
 Tags: auto-redirect, redirection, geo-ip, geographic, regional-website, multi-region
-Stable tag: 0.0.2
+Stable tag: 1.0.0
 Tested up to: 5.7.1
 License: GPLv2 or later License http://www.gnu.org/licenses/gpl-2.0.html
 
