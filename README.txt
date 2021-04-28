@@ -29,7 +29,7 @@ GeoRouter allows your website visitors to see the best website appropriate to th
 If you're offering different prices, different language, or are simply tailoring different websites to different regions, GeoRouter will help route your website visitors accordingly.
 
 == Setup ==
-Submit your interest at https://www.webdoodle.com.au/georouter/ and receive your GeoRouter namespace to use with this plugin.
+Submit your interest at [https://www.webdoodle.com.au/georouter/?ref=georouter-wordpress-plugin](https://www.webdoodle.com.au/georouter/?ref=georouter-wordpress-plugin) and receive your GeoRouter namespace to use with this plugin.
 
 == Terms ==
 
